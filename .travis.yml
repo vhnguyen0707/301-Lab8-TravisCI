@@ -8,7 +8,7 @@ env:
     - ANDROID_BUILD_TOOLS_VERSION=30.0.0
     - ANDROID_EMU_API_LEVEL=22
     - ANDROID_ABI=armeabi-v7a
-    - QMEU_AUDIO_DRV=none
+    - QEMU_AUDIO_DRV=none # Remove audio
 
 android:
   components:
@@ -35,16 +35,19 @@ android:
       - 'google-gdk-license-.+'
 
 before_install:
-  - yes | sdkmanager "platform;android-$ANDROID_EMU_API_LEVEL"
-  - yes | sdkmanager "platform;android-$ANDROID_API_LEVEL"
+  - yes | sdkmanager "platforms;android-$ANDROID_EMU_API_LEVEL"
+  - yes | sdkmanager "platforms;android-$ANDROID_API_LEVEL"
+
 before_script:
   - chmod +x gradlew
 
   #Emulator instance
-  - echo no | android create avd -- force -n test -t android -$ANDROID_EMU_API_LEVEL --api google_api?$ANDROID_ABI
-  - emulator -avd test -no-window 
+  # Start the emulator
+  - echo no | android create avd --force -n test -t android-$ANDROID_EMU_API_LEVEL --abi google_apis/$ANDROID_ABI
+  - emulator -avd test -no-window &
   - android-wait-for-emulator
   - adb shell input keyevent 82 &
+
 #script:
 #  - ./gradlew clean build
 #  - ./gradlew test
