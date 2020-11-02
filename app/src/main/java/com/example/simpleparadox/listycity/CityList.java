@@ -77,4 +77,9 @@ public class CityList {
     public int countCities() {
         return cities.size();
     }
+
+    public void addCity(){
+        City city = new City("Vancouver", "British Columbia");
+        cities.add(city);
+    }
 }
